@@ -38,7 +38,7 @@ def iniciar_interfaz():
     txt_cpp.pack(fill=tk.BOTH, expand=True)
     
     # Código C++ por defecto
-   # Código C++ por defecto
+
     codigo_cpp_default = """#include <iostream>
 
 using namespace std;
@@ -74,7 +74,6 @@ int main() {
 
     return 0;
 }"""
-    txt_cpp.insert("1.0", codigo_cpp_default)
     txt_cpp.insert("1.0", codigo_cpp_default)
 
     # --- Columna 2: Tercetos ---
