@@ -3,20 +3,43 @@ from logica.scanner import escanear_codigo
 from logica.reconocedor import generar_tercetos, generar_assembler
 
 def procesar_traduccion(txt_cpp, txt_tercetos, txt_asm):
-    # 1. Scanner (Obtenemos el texto)
-    codigo_fuente = txt_cpp.get("1.0", tk.END)
+    codigo_fuente = txt_cpp.get("1.0", tk.END).strip()
+    
+    if not codigo_fuente or codigo_fuente.isspace():
+        txt_tercetos.delete("1.0", tk.END)
+        txt_tercetos.insert("1.0", "⚠️ Algoritmo vacío")
+        txt_asm.delete("1.0", tk.END)
+        txt_asm.insert("1.0", "⚠️ Algoritmo vacío")
+        return
+    
     lineas_limpias = escanear_codigo(codigo_fuente)
     
-    # 2. Reconocedor (Generamos Tercetos y Assembler)
-    tercetos = generar_tercetos()
-    assembler = generar_assembler()
+    if not validar_algoritmo(codigo_fuente):
+        txt_tercetos.delete("1.0", tk.END)
+        txt_tercetos.insert("1.0", "⚠️ Algoritmo no esperado\n\nEsperado: FOR con comparaciones de mayor y menor")
+        txt_asm.delete("1.0", tk.END)
+        txt_asm.insert("1.0", "⚠️ Algoritmo no esperado")
+        return
     
-    # 3. Mostrar en pantalla
+    tercetos = generar_tercetos(lineas_limpias)
+    assembler = generar_assembler(lineas_limpias)
+    
     txt_tercetos.delete("1.0", tk.END)
     txt_tercetos.insert("1.0", tercetos)
     
     txt_asm.delete("1.0", tk.END)
     txt_asm.insert("1.0", assembler)
+
+
+def validar_algoritmo(codigo):
+    import re
+    codigo_str = ' '.join(codigo.split())
+    
+    tiene_for = bool(re.search(r'for\s*\(\s*int\s+\w+\s*=\s*\d+\s*;\s*\w+\s*<=\s*\d+\s*;\s*\w+\+\+\s*\)', codigo_str))
+    tiene_mayor = bool(re.search(r'numero_actual\s*>\s*mayor|mayor\s*<\s*numero_actual', codigo_str))
+    tiene_menor = bool(re.search(r'numero_actual\s*<\s*menor|menor\s*>\s*numero_actual', codigo_str))
+    
+    return tiene_for and tiene_mayor and tiene_menor
 
 def iniciar_interfaz():
     root = tk.Tk()
