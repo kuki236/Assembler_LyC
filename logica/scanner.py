@@ -1,5 +1,4 @@
 class Token:
-    """Clase para representar cada componente léxico encontrado."""
     def __init__(self, tipo, valor, linea):
         self.tipo = tipo
         self.valor = valor
@@ -22,7 +21,7 @@ class ScannerManual:
             "if", "int", "long", "register", "return", "short", "signed",
             "sizeof", "static", "struct", "switch", "typedef", "union",
             "unsigned", "void", "volatile", "while", "cout", "cin", "endl",
-            "using", "namespace", "std", "main"
+            "using", "namespace", "std", "main", "printf", "scanf"
         }
 
     def escanear(self, texto_entrada):
@@ -137,9 +136,6 @@ class ScannerManual:
 
 
 def escanear_codigo(texto_cpp):
-    """
-    Instancia el escáner manual y retorna la lista de Tokens.
-    """
     escaner = ScannerManual()
     lista_tokens = escaner.escanear(texto_cpp)
     return lista_tokens
